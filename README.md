@@ -2,7 +2,7 @@
 
 ```
 
-remove the nome in front, example:
+remove the name in front, example:
   mysql-docker-compose.yml to docker-compose.yml
   
 exec:
