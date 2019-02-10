@@ -1,4 +1,4 @@
-# docker-compose-repo
+# docker-compose-repository
 
 ```
 
