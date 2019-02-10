@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    volumes:
+      - /opt/mysql/data:/var/lib/mysql
+    restart: always
+    ports: 
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootuser
+      MYSQL_DATABASE: user
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+   
+  userservice:
+    build: .
+    command: npm start        
+    container_name: userservice
+    volumes:
+      - .:/opt/userservice
+      - /opt/userservice/node_modules      
+    ports: 
+      - "3000:3000"
+    depends_on:
+      - "mysql"   
+    links:
+      - mysql                  
