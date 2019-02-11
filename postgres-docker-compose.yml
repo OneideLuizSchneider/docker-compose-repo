@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    container_name: postgres    
+    volumes:      
+      - /opt/postgresql/data:/var/lib/postgresql      
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql -> optional
+    restart: always    
+    environment:
+      POSTGRES_DB: pedido
+      POSTGRES_USER: pedidoservice
+      POSTGRES_PASSWORD: 90123    
+        
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "pedido@pedido.com"
+      PGADMIN_DEFAULT_PASSWORD: "123456"
+    ports:
+      - 16543:80
+    links:
+      - postgres  
+    depends_on:
+      - postgres
+   
