@@ -1,0 +1,31 @@
+version: '3'
+services:
+  zabbix-db:
+    image: zabbix/zabbix-db-mariadb
+    volumes:
+      - zabbix-db-storage:/var/lib/mysql
+      - backups:/backups
+      - /opt/zabbix:/etc/localtime:ro
+    environment:
+      - MARIADB_USER=zabbix
+      - MARIADB_PASS=123456
+  zabbix-server:
+    image: zabbix/zabbix-3.0:latest
+    depends_on:
+      - zabbix-db
+    ports:
+      - "80:80"
+      - "10051:10051"
+    volumes:
+      - /opt/zabbix:/etc/localtime:ro
+    links:
+      - zabbix-db:zabbix.db
+    environment:
+      - ZS_DBHost=zabbix.db
+      - ZS_DBUser=zabbix
+      - ZS_DBPassword=123456
+volumes:
+  zabbix-db-storage:
+    driver: local
+  backups:
+    driver: local
