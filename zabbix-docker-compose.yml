@@ -1,5 +1,6 @@
 version: '3'
 services:
+
   zabbix-db:
     image: zabbix/zabbix-db-mariadb
     volumes:
@@ -8,7 +9,8 @@ services:
       - /opt/zabbix:/etc/localtime:ro
     environment:
       - MARIADB_USER=zabbix
-      - MARIADB_PASS=123456
+      - MARIADB_PASS=123
+      
   zabbix-server:
     image: zabbix/zabbix-3.0:latest
     depends_on:
@@ -23,7 +25,8 @@ services:
     environment:
       - ZS_DBHost=zabbix.db
       - ZS_DBUser=zabbix
-      - ZS_DBPassword=123456
+      - ZS_DBPassword=123
+      
 volumes:
   zabbix-db-storage:
     driver: local
