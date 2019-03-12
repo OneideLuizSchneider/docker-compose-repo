@@ -15,16 +15,6 @@ services:
     networks:
       - mysql-network  
       
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: phpmyadmin
-    ports:
-      - 80:80
-    environment:
-      - PMA_ARBITRARY=1      
-    networks:
-      - mysql-network   
-      
 networks:
   mysql-network:
     driver: bridge        
