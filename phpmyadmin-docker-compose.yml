@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+     
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    ports:
+      - 80:80
+    environment:
+      - PMA_ARBITRARY=1      
+    networks:
+      - proxy-mysql
+
+networks:
+  proxy-mysql:
+    external:
+      name: mysql_mysql-network
