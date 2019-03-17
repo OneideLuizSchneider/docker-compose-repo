@@ -1,18 +1,21 @@
 version: '3'
+
 services:
 
   zabbix-db:
-    image: zabbix/zabbix-db-mariadb
+    image: mysql:5.7
     volumes:
-      - zabbix-db-storage:/var/lib/mysql
-      - backups:/backups
-      - /opt/zabbix:/etc/localtime:ro
-    environment:
-      - MARIADB_USER=zabbix
-      - MARIADB_PASS=123
+      - /opt/zabbix/mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"  
+    environment:     
+      - MYSQL_ROOT_PASSWORD=secret 
+      - MYSQL_DATABASE=zabbix
+      - MYSQL_USER=zabbix
+      - MYSQL_PASSWORD=zabbix
       
   zabbix-server:
-    image: zabbix/zabbix-3.0:latest
+    image: zabbix/zabbix-server-mysql:ubuntu-4.0-latest
     depends_on:
       - zabbix-db
     ports:
@@ -21,14 +24,32 @@ services:
     volumes:
       - /opt/zabbix:/etc/localtime:ro
     links:
-      - zabbix-db:zabbix.db
+      - zabbix-db
     environment:
-      - ZS_DBHost=zabbix.db
-      - ZS_DBUser=zabbix
-      - ZS_DBPassword=123
-      
-volumes:
-  zabbix-db-storage:
-    driver: local
-  backups:
-    driver: local
+      - MYSQL_ROOT_PASSWORD=secret
+      - DB_SERVER_HOST=zabbix-db
+      - DB_SERVER_PORT=3306
+      - MYSQL_DATABASE=zabbix
+      - MYSQL_USER=zabbix
+      - MYSQL_PASSWORD=zabbix
+
+  zabbix-web-nginx-mysql:
+    image: zabbix/zabbix-web-nginx-mysql:ubuntu-4.0-latest
+    ports:
+      - "8081:80"
+      - "8443:443"
+    links:
+      - zabbix-db
+      - zabbix-server
+    depends_on:
+      - zabbix-db
+      - zabbix-server
+
+    environment:
+      - DB_SERVER_HOST=zabbix-db
+      - DB_SERVER_PORT=3306
+      - MYSQL_DATABASE=zabbix
+      - MYSQL_USER=zabbix
+      - MYSQL_PASSWORD=zabbix
+      - ZBX_SERVER_HOST=zabbix-server
+ 
