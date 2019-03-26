@@ -6,4 +6,4 @@ services:
     command: bundle exec sidekiq -e production -C /home/app/site/config/sidekiq.yml
     restart: always
     volumes:
-      - ".:/home/app/site"
+      - .:/home/app/site
